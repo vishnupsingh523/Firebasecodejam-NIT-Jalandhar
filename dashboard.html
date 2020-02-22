@@ -1,0 +1,84 @@
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Dashboard</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+        
+    </head>
+    <body>
+      <div id="userdata">
+          
+      </div>
+      <button id="logout" class="btn btn-primary">Logout</button>
+      
+      <div id="data">
+
+      </div>
+        <!-- The core Firebase JS SDK is always required and must be listed first -->
+<script src="https://www.gstatic.com/firebasejs/7.9.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.9.0/firebase-database.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.9.0/firebase-auth.js"></script>
+<!-- TODO: Add SDKs for Firebase products that you want to use
+     https://firebase.google.com/docs/web/setup#available-libraries -->
+
+<script>
+  // Your web app's Firebase configuration
+  var firebaseConfig = {
+    apiKey: "AIzaSyBqrgIKDr8qDSGGgoUkzPbql8ohHOckUxw",
+    authDomain: "fir-codejamnitjalandhar.firebaseapp.com",
+    databaseURL: "https://fir-codejamnitjalandhar.firebaseio.com",
+    projectId: "fir-codejamnitjalandhar",
+    storageBucket: "fir-codejamnitjalandhar.appspot.com",
+    messagingSenderId: "959127747741",
+    appId: "1:959127747741:web:9ac3e02d053c31d0816874"
+    };
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+
+    
+
+  firebase.auth().onAuthStateChanged(function(user) {
+  if (user) {
+    // User is signed in.
+    console.log('User Signed In' );
+    console.log(user.email);
+    document.getElementById('userdata').innerHTML= `
+    <p>User Email: ${user.email} </p>
+    `
+   
+  } else {
+    // No user is signed in.
+    window.location="login.html";
+  }
+});
+
+document.getElementById('logout').addEventListener('click',logout)
+
+    var i=1;
+      firebase.database().ref('thoughts').once('value', function(snapshot) {
+        snapshot.forEach(function(childSnapshot) {
+          var childKey = childSnapshot.key;
+          var childData = childSnapshot.val();
+          document.getElementById('data').innerHTML += `
+              <div>
+                  <p scope="row">`+i+++`</p>
+                  <p>`+childData.yourthoughts+`</p>
+                  <p>`+childData.date+`</p>
+                  
+              <div>
+          `;
+        });
+      });
+
+    function logout(){
+        firebase.auth().signOut().then(function(){
+            window.location="login.html"
+        }).catch(function(e){
+            console.log(e);
+        })
+    }
+
+</script>
+
+    </body>
+</html>
